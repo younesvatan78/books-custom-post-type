@@ -4,7 +4,6 @@ function add_books_post_type_add_metabox() {
 }
 
 function add_books_post_type_author_metabox_callback($post) {
-    
     $author = get_post_meta($post->ID, 'book_author', true);
     echo '<input type="text" name="book_author" value="' . esc_attr($author) . '" class="widefat" />';
 }

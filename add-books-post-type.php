@@ -23,4 +23,22 @@ require_once plugin_dir_path(__FILE__) . 'includes/custom-fields.php';
 
 // Include Shortcode for Searching Books
 require_once plugin_dir_path(__FILE__) . 'includes/shortcode.php';
+require_once plugin_dir_path(__FILE__) . 'includes/custom-taxonomies.php';
 
+// Activation hook
+function add_books_post_type_activate() {
+
+    add_books_post_type_register_book();
+    add_book_taxonomies();
+    // Flush rewrite rules
+    flush_rewrite_rules();
+}
+
+register_activation_hook(__FILE__, 'add_books_post_type_activate');
+
+// Deactivation hook
+function add_books_post_type_deactivate() {
+    // Flush rewrite rules
+    flush_rewrite_rules();
+}
+register_deactivation_hook(__FILE__, 'add_books_post_type_deactivate');
