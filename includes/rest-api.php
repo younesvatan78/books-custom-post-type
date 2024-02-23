@@ -68,15 +68,15 @@ function custom_book_update($request) {
 
     // Update custom fields for author, price, and year
     if (isset($request['author'])) {
-        update_post_meta($post_id, 'author', sanitize_text_field($request['author']));
+        update_post_meta($post_id, 'book_author', sanitize_text_field($request['author']));
     }
 
     if (isset($request['price'])) {
-        update_post_meta($post_id, 'price', sanitize_text_field($request['price']));
+        update_post_meta($post_id, 'book_price', sanitize_text_field($request['price']));
     }
 
     if (isset($request['year'])) {
-        update_post_meta($post_id, 'year', sanitize_text_field($request['year']));
+        update_post_meta($post_id, 'book_year', sanitize_text_field($request['year']));
     }
 
     return new WP_REST_Response(array('message' => 'Book updated successfully', 'post_id' => $post_id), 200);
