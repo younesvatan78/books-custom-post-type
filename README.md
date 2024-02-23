@@ -31,6 +31,6 @@ To edit a book's title and description, send a POST request to `/wp-json/custom-
 
 ```bash
 curl --request POST \
-  --url http://yourwebsite.com/wp-json/custom-book/v1/update-book/{book_id} \
+  --url http://yourwebsite.com/wp-json/custom-book/v1/update-book/{id} \
   --header 'Content-Type: application/json' \
   --data '{"title":"New Book Title", "description":"New book description."}'
