@@ -23,10 +23,27 @@ function register_custom_book_api_routes() {
                     return is_string($param);
                 }
             ),
+            'author' => array(
+                'required' => false,
+                'validate_callback' => function($param, $request, $key) {
+                    return is_string($param);
+                }
+            ),
+            'price' => array(
+                'required' => false,
+                'validate_callback' => function($param, $request, $key) {
+                    return is_numeric($param);
+                }
+            ),
+            'year' => array(
+                'required' => false,
+                'validate_callback' => function($param, $request, $key) {
+                    return is_numeric($param) && strlen($param) == 4;
+                }
+            ),
         ),
     ));
 }
-add_action('rest_api_init', 'register_custom_book_api_routes');
 
 add_action('rest_api_init', 'register_custom_book_api_routes');
 
@@ -34,27 +51,32 @@ function custom_book_update($request) {
     $post_id = $request['id'];
     $post_data = array('ID' => $post_id);
 
-    // Update the title if provided
     if (isset($request['title'])) {
         $post_data['post_title'] = sanitize_text_field($request['title']);
     }
 
-    // Update the description (content) if provided
     if (isset($request['description'])) {
         $post_data['post_content'] = sanitize_textarea_field($request['description']);
     }
 
-    // Verify post type is 'book'
-    $post_type = get_post_type($post_id);
-    if ('book' !== $post_type) {
-        return new WP_Error('incorrect_post_type', 'Can only update books', array('status' => 404));
-    }
-
-    // Proceed with the update
+    // Update the book post
     $result = wp_update_post($post_data, true);
 
     if (is_wp_error($result)) {
         return $result;
+    }
+
+    // Update custom fields for author, price, and year
+    if (isset($request['author'])) {
+        update_post_meta($post_id, 'author', sanitize_text_field($request['author']));
+    }
+
+    if (isset($request['price'])) {
+        update_post_meta($post_id, 'price', sanitize_text_field($request['price']));
+    }
+
+    if (isset($request['year'])) {
+        update_post_meta($post_id, 'year', sanitize_text_field($request['year']));
     }
 
     return new WP_REST_Response(array('message' => 'Book updated successfully', 'post_id' => $post_id), 200);
